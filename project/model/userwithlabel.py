@@ -56,7 +56,7 @@ class UserWithLabel(db.Model):
         return label
 
     @classmethod
-    def readAll(self):
+    def readAll(self):  
         sql = 'select labelmartix from userwithlabel'
         res = list(db.engine.execute(sql).fetchall())
         ans = []

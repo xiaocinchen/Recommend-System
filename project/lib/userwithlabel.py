@@ -13,12 +13,12 @@ def init_userwithlabel(name):
     username = name
     hobby = [0]*CountLabel()
     hobbyblob = pickle.dumps(hobby)
-    if (UserWithLabel.add(username,hobbyblob) == 1):
+    if UserWithLabel.add(username,hobbyblob) == 1:
         logger.info('Success to init labelmartix')
     else:
         logger.error('Fail to init labelmartix')
 
-def getAllSum(*name):
+def getAllSum(*name): #获取打标签的计数和
     s = 0
     if (len(name) == 0):
         res = UserWithLabel.readAll()

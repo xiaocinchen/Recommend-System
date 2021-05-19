@@ -1,3 +1,5 @@
+from re import T, sub
+from flask.json import loads
 from model.__init__ import app, db
 from lib.label import CountLabel
 from lib.userwithlabel import getAllSum
@@ -16,8 +18,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import sys
 import numpy as np
+import subprocess
 sys.path.append("..")
-
 
 def init_hobby(username):
     username = username
@@ -28,18 +30,11 @@ def init_hobby(username):
     else:
         logger.error('Fail to init hobbymartix')
 
-
 def recommend(username):
-    usermartix = Hobby.getMartix(username)
-    textmartix = TextWithLabel.getLabelMartix()
-    hobby = []
-    for i, tmartix in enumerate(textmartix):
-        martix = list(eval(tmartix['label']))
-        a = 0
-        for m in martix:
-            a += usermartix[int(m)]
-        hobby.append(a)
-    TFIDFMartix = np.array(calTFIDF(username))
+    TFIDFMartix = Hobby.getMartix(username)
+    # logger.info(str(list(TFIDFMartix)))
+    subprocess.Popen("python3 ./lib/background.py %s"%(username),shell = True,stdout=subprocess.PIPE)
+    # p = subprocess.Popen("pwd",shell=True)
     labelMartix = TextWithLabel.getLabelMartix()
     lastMartix = []
     for label in labelMartix:
@@ -55,7 +50,7 @@ def recommend(username):
 def calTFIDF(username):
     # user_hobby_sum = userinfodic[username]['user_hobby_sum']
     user_hobby_sum = getAllSum(username)
-    all_user_hobby_sum = getAllSum()
+    # all_user_hobby_sum = getAllSum()
     user_hobby = UserWithLabel.read(username)
     labelnum = Label.getLabelNum()
     TFIDFMartix = [0]*labelnum

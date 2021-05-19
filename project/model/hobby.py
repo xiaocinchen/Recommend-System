@@ -6,9 +6,9 @@ import pickle
 from .__init__ import db
 from datetime import datetime
 from util.logger import logger
-import random
 
 class Hobby(db.Model):
+    __tablename__ = 'hobby'
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(20),unique = True)
     hobbymartix = db.Column(db.LargeBinary)   #兴趣矩阵
@@ -28,5 +28,10 @@ class Hobby(db.Model):
         res = dict(list(db.engine.execute(sql).fetchall())[0])
         # logger.info(pickle.loads(res['hobbymartix']))
         return pickle.loads(res['hobbymartix'])
+
+    def update(name,hobby):
+        hobby = pickle.dumps(hobby)
+        Hobby.query.filter_by(name = name).update({'hobbymartix':hobby})
+        db.session.commit()
 
 
