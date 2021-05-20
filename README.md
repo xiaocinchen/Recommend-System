@@ -1,10 +1,5 @@
 # Recommend-System
-Recommend System based on labels
 
-My graduation project in BJTU.
+So this branch is going to be dropped.
 
-Data set : THUCNEWS
-
-Wait to finish.
-
-Wait!
+Master is better! Not Main.
