@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from model.__init__ import app
 from lib.user import *
 from lib.news import *
+from lib.comment import *
 
 @app.route('/login/',methods=["POST"])
 def login1():
@@ -37,6 +38,21 @@ def filternews1():
     g.name = request.args.get('name')
     return filternews(kind)
 
+@app.route('/comments',methods = ['GET'])
+def getComment1():
+    textname = request.args.get('textname')
+    g.name = request.args.get('name')
+    return getComment(textname)
+
+@app.route('/comments',methods = ['POST'])
+def addComment1():
+    textname = request.form['textname']
+    g.name = request.form['name']
+    content = request.form['content']
+    logger.warning(textname)
+    return addComment(textname,g.name,content)
+
 if __name__ == '__main__':
     app.run()
+
 
