@@ -17,7 +17,7 @@ class Comment(db.Model):
 
     @classmethod
     def queryContentFromName(self,textname):
-        sql = 'select * from comment where textname = \'%s\''%(textname)
+        sql = 'select content,username,date from comment where textname = \'%s\''%(textname)
         res = list(db.engine.execute(sql).fetchall())
         return res 
 
