@@ -52,6 +52,10 @@ def addComment1():
     logger.warning(textname)
     return addComment(textname,g.name,content)
 
+@app.route('/update',methods = ['PATCH'])
+def updateInfo1():
+    return updateInfo()
+
 if __name__ == '__main__':
     app.run()
 

@@ -4,6 +4,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from .__init__ import db
 from model.hobby import Hobby
+from util.logger import logger
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -28,4 +29,12 @@ class User(db.Model):
         except Exception as e:
             logger.error(str(e.args))
             return False
-        
+
+    def update(userinfo):
+        try:
+            User.query.filter_by(name = userinfo['name']).update({'nickname':userinfo['nickname'],'email':userinfo['email'],'passwd':userinfo['passwd']})
+            db.session.commit()
+            return True
+        except Exception as e:
+            logger.error(str(e.args))
+            return False

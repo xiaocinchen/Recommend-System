@@ -51,4 +51,15 @@ def register():
             data = {"flag":0}
     return data
 
-    
+def updateInfo():
+    username = request.form['name']
+    passwd = request.form['passwd']
+    email = request.form['email']
+    nickname = request.form['nickname']
+    userinfo = {
+        'name':username,
+        'passwd':passwd,
+        'email':email,
+        'nickname':nickname
+    }
+    return {"flag":1} if User.update(userinfo) else {"flag":0}
