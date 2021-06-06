@@ -43,28 +43,27 @@ class News(db.Model):
         return res
 
     @classmethod
-    def queryOnePage(self, *kind):
+    def queryOnePage(self, num = 10,offset = 0,*kind):
         martix = recommend(g.name)
         relist = []
         if len(kind) > 0:
-            logger.error(len(kind))
+            logger.error(str(kind))
             if len(kind[0]) > 1:
                 sql = 'select textname,label from news where ( label = '
-                for realkind in kind:
-                    for index,k in enumerate(realkind):
-                        sql += '\''+ str(k) + '\' or label = ' if index != len(realkind)-1 else '\''+str(k) + '\' )'
+                for index,k in enumerate(kind):
+                    sql += '\''+ str(k) + '\' or label = ' if index != len(kind)-1 else '\''+str(k) + '\' )'
             else:
                 sql = 'select textname,label from news where label = '
-                for realkind in kind:
-                    for index,k in enumerate(realkind):
-                        sql += '\''+ str(k) + '\' or label = ' if index != len(realkind)-1 else '\''+str(k) + '\' '
+                for index,k in enumerate(kind):
+                    sql += '\''+ str(k) + '\' or label = ' if index != len(kind)-1 else '\''+str(k) + '\' '
         else:
             sql = 'select textname,label from news '
-        for i, m in enumerate(martix):
-            if len(relist) > 10:
+        for i, m in enumerate(martix[int(offset)*int(num)+random.randint(10,50):]):
+            if len(relist) > num:
                 break
             realsql = sql + ' and id = '+str(m) if len(kind) != 0 else sql + 'where id = '+str(m)
             res = list(db.engine.execute(realsql).fetchall())
+            logger.critical('rrrr'+str(res))
             if len(res) > 0:
                 relist.append(dict(res[0]))
         logger.warning(res)
@@ -72,8 +71,16 @@ class News(db.Model):
         sql = ''
         for i,a in enumerate(relist):
             sql += 'select title,author,date,textname from %s where textname = \'%s\' union '%(a['label'],a['textname']) if i != len(relist)-1 else 'select title,author,date,textname from %s where textname = \'%s\''%(a['label'],a['textname']) 
-        logger.info(sql)
-        res = db.engine.execute(sql) 
+        logger.debug("sql :"+sql)
+        if sql:
+            # sql += ' limit %s,%s  '%(offset,num)
+            res = db.engine.execute(sql)
+        return res
+
+    @classmethod
+    def queryCount(self):
+        sql = 'select count(*) from news'
+        res = db.engine.execute(sql)
         return res
 
     @classmethod
@@ -85,7 +92,7 @@ class News(db.Model):
         res = db.engine.execute(sql)
         return res
     
-class LableNews(News):
+class LabelNews(News):
     __tablename__ = 'news'
     label = db.Column(db.String(30))
 

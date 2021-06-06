@@ -18,28 +18,28 @@ kinddic = {'体育':'sportsnews','财经':'finanews','教育':'edunews','股票'
 
 def fenye(num):
     #news = db.session.query(Sportsnews.content,Sportsnews.title,Sportsnews.textname,Sportsnews.date,Sportsnews.author).filter(User.nickname==nickname,User.passwd==passwd).one()
-    cl = [conlist]*4
+    # cl = [conlist]*4
     data = {
-        "list":cl,
+        "list":[],
         "id":num,
         "totalPage":2,
-        "pagesize":len(cl),
+        "pagesize":10,
         "total":7,
     }
+    logger.info('aaaaaaaaaa')
     return jsonify(data)
 
 def getpage(page):
-    res = list(News.queryOnePage())
-    # News.queryOnePage()
+    res = list(News.queryOnePage(offset = int(page)-1))
+    count = list(News.queryCount())
+    logger.info('total '+str(count[0][0]))
     newsdata = []
     newsdata.extend(dict(r) for r in res)
     data = {
         "list":newsdata,
-        "id":3,
-        "totalPage":2,
-        "pagesize":len(res),
-        "total":7,
+        "total":count[0][0]
     }
+    # logger.info('fufufufufufu')
     return jsonify(data)
 
 def getmore(name,textname):
@@ -63,7 +63,7 @@ def filternews(kind):
     for i,k in enumerate(kind):
         kind[i] = kinddic[k]
     # logger.debug(kind)
-    res = list(News.queryOnePage(kind)) if g.flag == 1 else list(News.queryOnePage())
+    res = list(News.queryOnePage(10,0,*kind)) if g.flag == 1 else list(News.queryOnePage())
     newsdata = []
     newsdata.extend(dict(r) for r in res)
     data = {

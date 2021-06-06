@@ -43,7 +43,7 @@ class News(db.Model):
     date = db.Column(db.DateTime)
     author = db.Column(db.String(50))
 
-class LableNews(News):
+class LabelNews(News):
     __tablename__ = 'news'
     label = db.Column(db.String(30))
 
@@ -125,7 +125,7 @@ for i in range(0,1000):
     newsinfo = SharesNews(textname=filelist[i],content=filetext,title=filetitle)
     db.session.add(newsinfo)
     db.session.commit()
-    newsinfo = LableNews(textname=filelist[i],label = 'sharesnews')
+    newsinfo = LabelNews(textname=filelist[i],label = 'sharesnews')
     db.session.add(newsinfo)
     db.session.commit()
 # print(filelist[:100])
